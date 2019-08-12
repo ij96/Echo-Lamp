@@ -8,8 +8,8 @@ Language: C++ (Arduino)
 
 ## Things
 
-- Garden Lamp: see folder `garden_lamp`
-- Curtain: see folder `curtain`
+- Garden Lamp: see folder `src/garden_lamp`
+- Curtain: see folder `src/curtain`
 
 ## User instructions
 
@@ -29,9 +29,11 @@ Language: C++ (Arduino)
 - Install library: in Arduino IDE, go to Sketch > Include Library > Manage Libraries, search and install `FauxmoESP`
 
 ### Upload code
-- In Tools > Board, choose `NodeMCU 1.0 (ESP-12E Module)` or `Adafruit Feather HUZZAH ESP8266`
-- In Tools > Port, choose the port connected to the NodeMCU board
-
+- **Copy `src/wifi_config.h` into the same directory as the Arduino sketch, and modify the Wi-Fi SSID and password to your own**.
+- Open Arduino IDE.
+- In Tools > Board, choose `NodeMCU 1.0 (ESP-12E Module)` or `Adafruit Feather HUZZAH ESP8266`.
+- In Tools > Port, choose the port connected to the NodeMCU / Feather HUZZAH
+- Upload sketch
 
 ## Notes
 - WeMo (and thus `fauxmo`) devices could only respond to two commands: on and off. For more complicated functionalities, we need to use Amazon Skill.
