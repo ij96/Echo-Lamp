@@ -1,5 +1,7 @@
 # Garden Lamp
 
+Controller: Adafruit Feather HUZZAH ESP8266 + `fauxmo`
+
 This lamp is modified from a store-bought garden lamp that contains:
 - solar panel array
 - rechargeable NiMH battery pack (3 AA)
@@ -8,4 +10,4 @@ This lamp is modified from a store-bought garden lamp that contains:
 
 ## To-Do
 - [ ] sleep more often
-- [ ] new circuit design
+- [ ] new circuit design - take control over all components

@@ -4,7 +4,7 @@
 #include "wifi_config.h"
 
 #define SERIAL_BAUDRATE   115200
-#define DEVICE_ID_LAMP    "garden lamp"
+#define DEVICE_ID_LAMP    "the garden lamp"
 
 #define BLUE_LED_PIN      2
 #define RELAY_PIN         12
