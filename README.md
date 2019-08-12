@@ -1,18 +1,15 @@
-# Echo Lamp
+# Echo Things
 
-Remotely controlled ESP8266 lamp, controlled via Alexa (Amazon Echo).
+IoT things to be controlled via Alexa (Amazon Echo).
 
 Controller: NodeMCU DEVKIT 1.0 / Adafruit Feather HUZZAH ESP8266
 
 Language: C++ (Arduino)
 
-This lamp is modified from a store-bought garden lamp that contains:
-- solar panel array
-- rechargeable NiMH battery pack (3 AA)
-- light sensor (possibly a photodiode)
-- LED
+## Things
 
-Plan is to use an ESP8266 based board to control everything.
+- Garden Lamp: see folder `garden_lamp`
+- Curtain: see folder `curtain`
 
 ## User instructions
 
@@ -39,7 +36,3 @@ Plan is to use an ESP8266 based board to control everything.
 ## Notes
 - WeMo (and thus `fauxmo`) devices could only respond to two commands: on and off. For more complicated functionalities, we need to use Amazon Skill.
 - Wi-Fi module consumes a lot of power - sleep often to conserve battery.
-
-## To-Do
-- [ ] sleep more often
-- [ ] new circuit design
