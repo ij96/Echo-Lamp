@@ -24,8 +24,8 @@ fauxmoESP fauxmo;
 #define OPEN_PIN          D6
 #define STOP_PIN          D7
 
-#define DEVICE_ID_OPENER  "curtain opener"
-#define DEVICE_ID_CLOSER  "curtain closer"
+#define DEVICE_ID_OPENER  "living room curtain opener"
+#define DEVICE_ID_CLOSER  "living room curtain closer"
 
 ////////// FUNCTIONS ///////////////////////////////////////////////////////////
 

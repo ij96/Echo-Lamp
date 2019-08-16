@@ -9,4 +9,6 @@ Controller: NodeMCU DEVKIT 1.0
 - original controller had 4 buttons: open, close, and 2 buttons for stop. All buttons are active-low (possibly pulled high by a pull-up resistor), logic level = 5V.
 
 ## To-Do
-- [ ] add schematic and photos?
+- [ ] add schematic and photos
+- [ ] device does not respond after sometime - maybe disable the three control pins after a while, instead of leaving some on all the time
+- [ ] add pull-down resistors

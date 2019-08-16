@@ -9,9 +9,11 @@ Language: C++ (Arduino)
 ## Things
 
 - Garden Lamp: see folder `src/garden_lamp`
-- Curtain: see folder `src/curtain`
+- Electric curtain: see folder `src/curtain`
 
 ## User instructions
+
+**DO NOT CONNECT POWER VIA Vin AND USB AT THE SAME TIME!**
 
 ### Prerequisites
 - hardware:
@@ -42,5 +44,5 @@ You will also need to:
 - upload sketch
 
 ## Notes
-- WeMo (and thus `fauxmo`) devices could only respond to two commands: on and off. For more complicated functionalities, we can use Amazon Skill.
+- WeMo (and thus `FauxMo`) devices could only respond to two commands: on and off. For more complicated functionalities, we can use Amazon Skill.
 - Wi-Fi module consumes a lot of power - sleep often to conserve battery.
