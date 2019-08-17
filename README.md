@@ -19,7 +19,7 @@ Language: C++ (Arduino)
 - hardware:
   - [Adafruit Feather HUZZAH ESP8266](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266)
   - [NodeMCU DEVKIT 1.0 board](http://www.nodemcu.com)
-- software required:
+- software:
   - [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
 You will also need to:

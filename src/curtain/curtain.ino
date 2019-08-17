@@ -24,8 +24,17 @@ fauxmoESP fauxmo;
 #define OPEN_PIN          D6
 #define STOP_PIN          D7
 
-#define DEVICE_ID_OPENER  "living room curtain opener"
-#define DEVICE_ID_CLOSER  "living room curtain closer"
+#define DEVICE_ID_OPENER  "curtain opener"
+#define DEVICE_ID_CLOSER  "curtain closer"
+
+enum class Action {
+  Idle  = 0,
+  Open  = 1,
+  Close = 2,
+  Stop  = 3,
+};
+
+Action action_code = Action::Idle;
 
 ////////// FUNCTIONS ///////////////////////////////////////////////////////////
 
@@ -82,7 +91,8 @@ void setup() {
 
   // Wi-Fi
   wifi_setup();
-
+  
+  // Fauxmo
   fauxmo.createServer(true);
   fauxmo.setPort(80);
 
@@ -93,36 +103,61 @@ void setup() {
   fauxmo.addDevice(DEVICE_ID_CLOSER);
 
   // callback when a command from Alexa is received
+  // set flags here, commands are executed in the main loop
   fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
     Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
     if (strcmp(device_name, DEVICE_ID_OPENER)==0) {
-      //TRIGGER_ACTIVE_LOW(RED_LED_PIN, 1);
       if (state == HIGH) {
-        ENABLE_ACTIVE_HIGH(OPEN_PIN);
-        DISABLE_ACTIVE_HIGH(CLOSE_PIN);
-        DISABLE_ACTIVE_HIGH(STOP_PIN);
+        action_code = Action::Open;
       } else {
-        DISABLE_ACTIVE_HIGH(OPEN_PIN);
-        DISABLE_ACTIVE_HIGH(CLOSE_PIN);
-        ENABLE_ACTIVE_HIGH(STOP_PIN);
+        action_code = Action::Stop;
       }
-      fauxmo.setState(DEVICE_ID_CLOSER, false, 255);
     } else if (strcmp(device_name, DEVICE_ID_CLOSER)==0) {
-      //TRIGGER_ACTIVE_LOW(BLUE_LED_PIN, 1);
       if (state == HIGH) {
-        DISABLE_ACTIVE_HIGH(OPEN_PIN);
-        ENABLE_ACTIVE_HIGH(CLOSE_PIN);
-        DISABLE_ACTIVE_HIGH(STOP_PIN);
+        action_code = Action::Close;
       } else {
-        DISABLE_ACTIVE_HIGH(OPEN_PIN);
-        DISABLE_ACTIVE_HIGH(CLOSE_PIN);
-        ENABLE_ACTIVE_HIGH(STOP_PIN);
+        action_code = Action::Stop;
       }
-      fauxmo.setState(DEVICE_ID_OPENER, false, 255);
     }
   });
 }
 
 void loop() {
   fauxmo.handle();
+
+  switch(action_code) {
+    case Action::Idle:
+      break;
+    case Action::Open:
+      TRIGGER_ACTIVE_HIGH(OPEN_PIN, 500);
+      DISABLE_ACTIVE_HIGH(CLOSE_PIN);
+      DISABLE_ACTIVE_HIGH(STOP_PIN);
+      fauxmo.setState(DEVICE_ID_OPENER, true, 255);
+      fauxmo.setState(DEVICE_ID_CLOSER, false, 255);
+      action_code = Action::Idle;
+      break;
+    case Action::Close:
+      DISABLE_ACTIVE_HIGH(OPEN_PIN);
+      TRIGGER_ACTIVE_HIGH(CLOSE_PIN, 500);
+      DISABLE_ACTIVE_HIGH(STOP_PIN);
+      fauxmo.setState(DEVICE_ID_OPENER, false, 255);
+      fauxmo.setState(DEVICE_ID_CLOSER, true, 255);
+      action_code = Action::Idle;
+      break;
+    case Action::Stop:
+      DISABLE_ACTIVE_HIGH(OPEN_PIN);
+      DISABLE_ACTIVE_HIGH(CLOSE_PIN);
+      TRIGGER_ACTIVE_HIGH(STOP_PIN, 500);
+      fauxmo.setState(DEVICE_ID_OPENER, false, 255);
+      fauxmo.setState(DEVICE_ID_CLOSER, false, 255);
+      action_code = Action::Idle;
+      break;
+    default:
+      DISABLE_ACTIVE_HIGH(OPEN_PIN);
+      DISABLE_ACTIVE_HIGH(CLOSE_PIN);
+      DISABLE_ACTIVE_HIGH(STOP_PIN);
+      fauxmo.setState(DEVICE_ID_OPENER, false, 255);
+      fauxmo.setState(DEVICE_ID_CLOSER, false, 255);
+      action_code = Action::Idle;
+  }
 }

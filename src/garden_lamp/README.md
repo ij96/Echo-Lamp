@@ -1,6 +1,6 @@
 # Garden Lamp
 
-Controller: Adafruit Feather HUZZAH ESP8266 + `fauxmo`
+Controller: Adafruit Feather HUZZAH ESP8266 + `FauxMoESP`
 
 This lamp is modified from a store-bought garden lamp that contains:
 - solar panel array
