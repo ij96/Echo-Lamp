@@ -6,20 +6,20 @@
 #define SERIAL_BAUDRATE   115200
 #define DEVICE_ID_LAMP    "the garden lamp"
 
+#define RELAY_PIN         14
 #define BLUE_LED_PIN      2
-#define RELAY_PIN         12
 
 fauxmoESP fauxmo;
 
-void wifiSetup() {
+void wifi_setup() {
   // set Wi-Fi module to STA mode
   WiFi.mode(WIFI_STA);
 
-  // Connect
+  // connect
   Serial.printf("[WIFI] Connecting to %s ", WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
 
-  // Wait
+  // wait
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     digitalWrite(BLUE_LED_PIN, LOW);
@@ -29,51 +29,58 @@ void wifiSetup() {
   }
   Serial.println();
 
-  // Connected!
+  // connected
   Serial.printf("[WIFI] STATION Mode, SSID: %s, IP address: %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
 }
 
-void setup() {
-  pinMode(RELAY_PIN, OUTPUT);
-  digitalWrite(RELAY_PIN, LOW);
-  
-  pinMode(BLUE_LED_PIN, OUTPUT);
-  digitalWrite(BLUE_LED_PIN, LOW);
-  
-  Serial.begin(SERIAL_BAUDRATE);
+uint8_t prev_brightness = 0;
+uint8_t brightness = 0;
 
-  // Wifi
-  wifiSetup();
+void setup() {
+  // init serial port and clean garbage
+  Serial.begin(SERIAL_BAUDRATE);
+  Serial.println();
+  Serial.println();
+
+  // pins
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(BLUE_LED_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, LOW);
+  digitalWrite(BLUE_LED_PIN, HIGH);
+
+  // Wi-Fi
+  wifi_setup();
 
   // Fauxmo
   fauxmo.createServer(true);
   fauxmo.setPort(80);
 
   fauxmo.enable(true);
-  
+
+  // add virtual devices
   fauxmo.addDevice(DEVICE_ID_LAMP);
 
   fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
-    Serial.print("[MAIN] Device: ");Serial.print(device_name);
-    Serial.print(" state ");
-    if(state) {
-      Serial.println("ON");
-      digitalWrite(RELAY_PIN, HIGH);
+    Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
+    if (state) {
+      brightness = value;
     } else {
-      Serial.println("OFF");
-      digitalWrite(RELAY_PIN, LOW);
+      brightness = 0;
     }
-  
   });
 }
 
 void loop() {
   fauxmo.handle();
 
-  // print heap
-  //static unsigned long last = millis();
-  //if (millis() - last > 5000) {
-  //  last = millis();
-  //  Serial.printf("[MAIN] Free heap: %d bytes\n", ESP.getFreeHeap());
-  //}
+  if (brightness != prev_brightness) {
+    Serial.print("new brightness ");
+    Serial.println(brightness);
+    prev_brightness = brightness;
+    if (brightness == 0) {
+      digitalWrite(RELAY_PIN, LOW);
+    } else {
+      analogWrite(RELAY_PIN, brightness * 4); // ESP8266 analogWrite is 10-bit, unlike Arduino where it is 8-bit
+    }
+  }
 }

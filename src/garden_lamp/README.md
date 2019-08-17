@@ -10,4 +10,4 @@ This lamp is modified from a store-bought garden lamp that contains:
 
 ## To-Do
 - [ ] sleep more often
-- [ ] new circuit design - take control over all components
+- [x] new circuit design - take control over all components
